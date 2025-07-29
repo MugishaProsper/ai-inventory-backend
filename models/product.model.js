@@ -5,14 +5,7 @@ const productSchema = mongoose.Schema({
     name : { type : String, required : true },
     price : { type : String, required : [true, "Product price required!"] },
     images : [{ type : String }],
-    categories : [{ type : String }],
-    likes : { type : Number, default : 0 },
-    likers : [ { user : { type : mongoose.Schema.Types.ObjectId, ref : "User" }}],
-    statistics : {
-        total_rating : { type : Number, default : 0 },
-        avg_rating : { type : Number, default : 0.0 },
-        total_rating_count : { type : Number, default : 0 }
-    }
+    categories : [{ type : String }]
 }, { timestamps : true });
 
 productSchema.methods.rateProduct = async function (rating) {
