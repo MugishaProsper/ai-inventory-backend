@@ -11,7 +11,6 @@ export const addProductToInventory = async (req, res) => {
         if (!inventory) {
             inventory = new Inventory({ user: id, products: [], name: "Inventory" })
         };
-
         const existingItemInInventory = inventory.products.find(product =>
             product.product.toString() == productId
         );

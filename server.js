@@ -18,10 +18,9 @@ app.use(express.json());
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
-app.use("/api/inventory", inventoryRouter)
+app.use("/api/inventory", inventoryRouter);
 
 app.listen(PORT, async () => {
     console.log(`Server running on http://localhost:${PORT}`);
     await connectToDatabase()
 })
-
