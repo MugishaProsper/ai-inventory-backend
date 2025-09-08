@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs"
 import { generateTokenAndSetCookie } from "../utils/cookie.utils.js";
+import { generateResetPassword } from "../utils/generate.reset.js";
 
 export const register = async (req, res) => {
     const { fullname, username, email, password } = req.body;
@@ -47,5 +48,19 @@ export const logout = async (req, res) => {
     } catch (error) {
         console.log(error)
         return res.status(500).json({ message: "Internal server error" })
+    }
+};
+
+export const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+    try {
+        const user = await User.findOne({ email : email });
+        if(!user) return res.status(404).json({ message : "No such email" })
+        const  resetPassword = await generateResetPassword();
+        user.resetPassword = randomPassword;
+        return res.status(200).json({ message : "Reset password sent" })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message : "Internal server error" });
     }
 }
