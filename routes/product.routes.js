@@ -1,12 +1,32 @@
 import express from "express";
 import { authorize } from "../middlewares/auth.middleware.js";
-import { createProduct, deleteProduct, getAllProducts, getMyProducts } from "../controllers/product.controllers.js";
+import {
+    getAllProducts,
+    getMyProducts,
+    getProductById,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    updateProductStock,
+    rateProduct,
+    getProductsNeedingReorder,
+    bulkUpdateProducts
+} from "../controllers/product.controllers.js";
 
 const productRouter = express.Router();
 
-productRouter.post("/", authorize, createProduct);
-productRouter.delete("/:productId", authorize, deleteProduct);
+// Public routes
 productRouter.get("/", getAllProducts);
-productRouter.get("/me", authorize, getMyProducts);
+productRouter.post("/:productId/rate", rateProduct);
 
-export default productRouter
+// Protected routes
+productRouter.get("/me", authorize, getMyProducts);
+productRouter.get("/reorder", authorize, getProductsNeedingReorder);
+productRouter.get("/:productId", authorize, getProductById);
+productRouter.post("/", authorize, createProduct);
+productRouter.put("/:productId", authorize, updateProduct);
+productRouter.delete("/:productId", authorize, deleteProduct);
+productRouter.patch("/:productId/stock", authorize, updateProductStock);
+productRouter.patch("/bulk", authorize, bulkUpdateProducts);
+
+export default productRouter;

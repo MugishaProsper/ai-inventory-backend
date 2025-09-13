@@ -1,12 +1,30 @@
 import express from "express";
 import { authorize } from "../middlewares/auth.middleware.js";
-import { addProductToInventory, getInventory, removeProductsFromInventory, updateInventory } from "../controllers/inventory.controllers.js";
+import {
+    getInventory,
+    addProductToInventory,
+    removeProductFromInventory,
+    updateInventory,
+    reserveProductQuantity,
+    getInventoryAlerts,
+    markAlertsAsRead,
+    getInventorySummary,
+    transferProduct
+} from "../controllers/inventory.controllers.js";
 
 const inventoryRouter = express.Router();
 
-inventoryRouter.post("/", authorize, addProductToInventory);
-inventoryRouter.get("/", authorize, getInventory);
-inventoryRouter.put("/", authorize, updateInventory);
-inventoryRouter.delete("/", authorize, removeProductsFromInventory)
+// All inventory routes require authentication
+inventoryRouter.use(authorize);
 
-export default inventoryRouter
+inventoryRouter.get("/", getInventory);
+inventoryRouter.get("/summary", getInventorySummary);
+inventoryRouter.get("/alerts", getInventoryAlerts);
+inventoryRouter.post("/", addProductToInventory);
+inventoryRouter.put("/", updateInventory);
+inventoryRouter.delete("/", removeProductFromInventory);
+inventoryRouter.post("/reserve", reserveProductQuantity);
+inventoryRouter.post("/transfer", transferProduct);
+inventoryRouter.patch("/alerts/read", markAlertsAsRead);
+
+export default inventoryRouter;
