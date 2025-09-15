@@ -112,8 +112,8 @@
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/your-username/inventrika-backend.git
-cd inventrika-backend
+git clone https://github.com/MugishaProsper/ai-inventory-backend.git
+cd ai-inventory-backend
 ```
 
 2. **Install dependencies**
@@ -134,7 +134,7 @@ sudo systemctl start mongod
 
 # Or using Docker
 docker run -d -p 27017:27017 --name mongodb mongo:latest
-```
+``` 
 
 5. **Start the development server**
 ```bash
@@ -156,8 +156,8 @@ PORT=5000
 NODE_ENV=development
 
 # Database
-MONGODB_URI=mongodb://localhost:27017/inventrika
-DB_NAME=inventrika
+MONGODB_URI=mongodb://localhost:27017/inventrika_db
+DB_NAME=inventrika_db
 
 # JWT Authentication
 JWT_SECRET=your-super-secret-jwt-key
@@ -170,8 +170,9 @@ CLIENT_URL=http://localhost:3000
 # Email Configuration (Optional)
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
+EMAIL_USER="nelsonprox92@gmail.com"
+EMAIL_PASS="nelsonprox92@gmail.com"
+EMAIL_FROM="support@inventrika.com"
 
 # Cloudinary (Optional - for image uploads)
 CLOUDINARY_CLOUD_NAME=your-cloud-name
