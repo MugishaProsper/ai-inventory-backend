@@ -1,9 +1,11 @@
 import nodemailer from "nodemailer";
 
-export const transport = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
     from : `AI Inventory Management System <nelsonprox92@gmail.com>`,
     auth : {
-        user : "nelsonprox92@gmail.com",
-        pass : ""
+        user : process.env.EMAIL_USER,
+        pass : process.env.EMAIL_USER_PASS
     }
-})
+});
+
+export default transporter

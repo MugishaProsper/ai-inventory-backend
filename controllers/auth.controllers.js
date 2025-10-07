@@ -57,7 +57,7 @@ export const forgotPassword = async (req, res) => {
         const user = await User.findOne({ email : email });
         if(!user) return res.status(404).json({ message : "No such email" })
         const  resetPassword = await generateResetPassword();
-        user.resetPassword = randomPassword;
+        user.resetPassword = resetPassword;
         return res.status(200).json({ message : "Reset password sent" })
     } catch (error) {
         console.log(error)

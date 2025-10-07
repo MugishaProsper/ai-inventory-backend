@@ -536,7 +536,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 <div align="center">
-  <p>Built with ❤️ by the Inventrika Team</p>
+  <p>Built with 🗿 by the Inventrika Team</p>
   <p>
     <a href="#-table-of-contents">Back to Top</a> •
     <a href="./API_DOCUMENTATION.md">API Docs</a> •
