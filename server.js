@@ -16,6 +16,9 @@ import analyticsRouter from "./routes/analytics.routes.js";
 import aiRouter from "./routes/ai.routes.js";
 import stockMovementRouter from "./routes/stockMovement.routes.js";
 
+import { configDotenv } from "dotenv";
+configDotenv()
+
 const app = express();
 
 const PORT = process.env.PORT || 5000;

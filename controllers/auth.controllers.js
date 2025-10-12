@@ -8,13 +8,11 @@ export const register = async (req, res) => {
     try {
         const existingUser = await User.findOne({ $or: [{ email: email }, { username: username }] });
         if (existingUser) return res.status(403).json({ message: "User already exists" });
-        const salt = await bcrypt.genSalt(12);
-        const hashedPassword = await bcrypt.hash(password, salt)
         const user = new User({
             fullname: fullname,
             username: username,
             email: email,
-            password: hashedPassword
+            password: password
         });
         await user.save();
         return res.status(201).json({ message: "Registered successfully" })
@@ -29,7 +27,7 @@ export const login = async (req, res) => {
     try {
         const user = await User.findOne({ email: email });
         if (!user) return res.status(404).json({ message: "User not found" });
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        const isPasswordValid = await user.comparePassword(password);
         if (!isPasswordValid) {
             return res.status(403).json({ message: "Incorrect password" });
         };
@@ -58,6 +56,8 @@ export const forgotPassword = async (req, res) => {
         if(!user) return res.status(404).json({ message : "No such email" })
         const  resetPassword = await generateResetPassword();
         user.resetPassword = resetPassword;
+        await user.save();
+        
         return res.status(200).json({ message : "Reset password sent" })
     } catch (error) {
         console.log(error)
