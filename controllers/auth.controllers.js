@@ -117,3 +117,15 @@ export const resetPassword = async (req, res) => {
     });
   }
 };
+
+
+export const getCurrentUser = async (req, res) => {
+  const { id } = req.user;
+  try {
+    const user = await User.findById(id).select("-password");
+    return res.status(200).json({ success : true, message : "User found", user : user })
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success : false, message : "Internal server error", error : error.message })
+  }
+}
