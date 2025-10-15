@@ -8,7 +8,7 @@ export const authorize = async (req, res, next) => {
   try {
     if (!token)
       return res
-        .status(404)
+        .status(401)
         .json({ success: false, message: "No token found" });
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (!decoded)
