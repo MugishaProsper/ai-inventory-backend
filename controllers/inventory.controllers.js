@@ -1,7 +1,6 @@
 import Inventory from "../models/inventory.model.js";
 import Product from "../models/product.model.js";
 import StockMovement from "../models/stockMovement.model.js";
-import mongoose from "mongoose";
 
 // Get user's inventory with detailed information
 export const getInventory = async (req, res) => {

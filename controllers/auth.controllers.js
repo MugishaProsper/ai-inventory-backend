@@ -1,5 +1,4 @@
 import User from "../models/user.model.js";
-import bcrypt from "bcryptjs";
 import { generateTokenAndSetCookie } from "../utils/cookie.utils.js";
 import { generateResetPassword } from "../utils/generate.reset.js";
 
@@ -117,7 +116,6 @@ export const resetPassword = async (req, res) => {
     });
   }
 };
-
 
 export const getCurrentUser = async (req, res) => {
   const { id } = req.user;
