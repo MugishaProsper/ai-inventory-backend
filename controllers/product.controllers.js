@@ -3,6 +3,8 @@ import Category from "../models/category.model.js";
 import Supplier from "../models/supplier.model.js";
 import Inventory from "../models/inventory.model.js";
 import StockMovement from "../models/stockMovement.model.js";
+// Ensure User model is registered before any populate on StockMovement.user
+import User from "../models/user.model.js";
 import mongoose from "mongoose";
 
 // Get all products with advanced filtering and pagination
@@ -269,11 +271,12 @@ export const getMyProducts = async (req, res) => {
 export const getProductById = async (req, res) => {
   try {
     const { productId } = req.params;
-    const { id: userId } = req.user;
+    const { id } = req.user;
 
-    const product = await Product.findOne({ _id: productId, user: userId })
+    const product = await Product.findOne({ _id: productId, user: id })
       .populate("category", "name color icon description")
-      .populate("supplier", "name code contact address performance");
+      .populate("supplier", "name code contact address performance")
+      .populate("user", "fullname username email role");
 
     if (!product) {
       return res.status(404).json({

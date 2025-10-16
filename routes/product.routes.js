@@ -24,6 +24,7 @@ productRouter.post("/:productId/rate", rateProduct);
 // Protected routes
 // Use disk storage so Cloudinary receives a valid file path
 const upload = multer({ dest: 'uploads/', limits: { files: 10 } });
+
 productRouter.get("/me", authorize, getMyProducts);
 productRouter.get("/reorder", authorize, getProductsNeedingReorder);
 productRouter.get("/:productId", authorize, getProductById);

@@ -28,5 +28,8 @@ userSchema.methods.comparePassword = async function (password) {
     }    
 }
 
-const User = mongoose.model("users", userSchema);
+userSchema.set('toJSON', { virtuals: true });
+userSchema.set('toObject', { virtuals: true });
+
+const User = mongoose.model("User", userSchema);
 export default User
