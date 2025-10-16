@@ -379,7 +379,7 @@ export const createProduct = async (req, res) => {
       category,
       supplier,
       location,
-      images,
+      images: (req.imageUrls && Array.isArray(req.imageUrls) && req.imageUrls.length > 0) ? req.imageUrls : images,
       tags,
     });
 
@@ -437,7 +437,7 @@ export const updateProduct = async (req, res) => {
   try {
     const { id: userId } = req.user;
     const { productId } = req.params;
-    const updates = req.body;
+    const updates = { ...req.body };
 
     // Check if product exists and belongs to user
     const existingProduct = await Product.findOne({
@@ -518,6 +518,10 @@ export const updateProduct = async (req, res) => {
           await inventory.removeProduct(productId, Math.abs(quantityDiff));
         }
       }
+    }
+
+    if (req.imageUrls && Array.isArray(req.imageUrls) && req.imageUrls.length > 0) {
+      updates.images = req.imageUrls;
     }
 
     const product = await Product.findByIdAndUpdate(productId, updates, {
