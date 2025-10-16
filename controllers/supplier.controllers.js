@@ -121,6 +121,11 @@ export const createSupplier = async (req, res) => {
   try {
     const supplierData = req.body;
 
+    // Attach logo from Cloudinary upload if present
+    if (Array.isArray(req.uploadedImageUrls) && req.uploadedImageUrls.length > 0) {
+      supplierData.logo = req.uploadedImageUrls[0];
+    }
+
     // Check if supplier with same name or email exists
     const existingSupplier = await Supplier.findOne({
       $or: [
@@ -159,6 +164,11 @@ export const updateSupplier = async (req, res) => {
   try {
     const { supplierId } = req.params;
     const updates = req.body;
+
+    // Attach logo from Cloudinary upload if present
+    if (Array.isArray(req.uploadedImageUrls) && req.uploadedImageUrls.length > 0) {
+      updates.logo = req.uploadedImageUrls[0];
+    }
 
     // Check if new name or email conflicts with existing supplier
     if (updates.name || updates.contact?.email) {

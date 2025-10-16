@@ -13,6 +13,8 @@ import {
 } from "../controllers/supplier.controllers.js";
 import { supplierSchemas } from "../middlewares/validation.middleware.js";
 import { validate } from "../middlewares/validation.middleware.js";
+import multer from "multer";
+import { uploadImages } from "../middlewares/upload.middleware.js";
 
 const supplierRouter = express.Router();
 
@@ -21,9 +23,11 @@ supplierRouter.get("/", getAllSuppliers);
 supplierRouter.get("/leaderboard", getSupplierLeaderboard);
 supplierRouter.get("/:supplierId", getSupplierById);
 
+const upload = multer({ dest: 'uploads/' });
+
 // Protected routes
-supplierRouter.post("/", authorize, validate(supplierSchemas.create), createSupplier);
-supplierRouter.put("/:supplierId", authorize, validate(supplierSchemas.update), updateSupplier);
+supplierRouter.post("/", authorize, upload.single('logo'), uploadImages("suppliers"), validate(supplierSchemas.create), createSupplier);
+supplierRouter.put("/:supplierId", authorize, upload.single('logo'), uploadImages("suppliers"), validate(supplierSchemas.update), updateSupplier);
 supplierRouter.delete("/:supplierId", authorize, deleteSupplier);
 supplierRouter.post("/:supplierId/rate", authorize, rateSupplier);
 supplierRouter.post("/:supplierId/performance", authorize, updateSupplierPerformance);
