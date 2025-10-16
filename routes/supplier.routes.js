@@ -14,9 +14,23 @@ import {
 import { supplierSchemas } from "../middlewares/validation.middleware.js";
 import { validate } from "../middlewares/validation.middleware.js";
 import multer from "multer";
-import { uploadImages } from "../middlewares/upload.middleware.js";
+import { uploadImages, uploadImage } from "../middlewares/upload.middleware.js";
 
 const supplierRouter = express.Router();
+
+// Parse JSON fields that may arrive as strings via multipart/form-data
+const parseJsonFields = (req, _res, next) => {
+    try {
+        if (typeof req.body?.contact === 'string') {
+            try { req.body.contact = JSON.parse(req.body.contact); } catch { }
+        }
+        if (typeof req.body?.address === 'string') {
+            try { req.body.address = JSON.parse(req.body.address); } catch { }
+        }
+    } finally {
+        next();
+    }
+};
 
 // Public routes
 supplierRouter.get("/", getAllSuppliers);
@@ -26,8 +40,8 @@ supplierRouter.get("/:supplierId", getSupplierById);
 const upload = multer({ dest: 'uploads/' });
 
 // Protected routes
-supplierRouter.post("/", authorize, upload.single('logo'), uploadImages("suppliers"), validate(supplierSchemas.create), createSupplier);
-supplierRouter.put("/:supplierId", authorize, upload.single('logo'), uploadImages("suppliers"), validate(supplierSchemas.update), updateSupplier);
+supplierRouter.post("/", authorize, upload.single('logo'), uploadImage("suppliers"), parseJsonFields, validate(supplierSchemas.create), createSupplier);
+supplierRouter.put("/:supplierId", authorize, upload.single('logo'), uploadImage("suppliers"), parseJsonFields, validate(supplierSchemas.update), updateSupplier);
 supplierRouter.delete("/:supplierId", authorize, deleteSupplier);
 supplierRouter.post("/:supplierId/rate", authorize, rateSupplier);
 supplierRouter.post("/:supplierId/performance", authorize, updateSupplierPerformance);

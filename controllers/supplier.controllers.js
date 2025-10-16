@@ -120,10 +120,17 @@ export const getSupplierById = async (req, res) => {
 export const createSupplier = async (req, res) => {
   try {
     const supplierData = req.body;
+    // Multipart sends objects as strings; parse if needed
+    if (typeof supplierData.contact === 'string') {
+      try { supplierData.contact = JSON.parse(supplierData.contact); } catch { }
+    }
+    if (typeof supplierData.address === 'string') {
+      try { supplierData.address = JSON.parse(supplierData.address); } catch { }
+    }
 
-    // Attach logo from Cloudinary upload if present
-    if (Array.isArray(req.uploadedImageUrls) && req.uploadedImageUrls.length > 0) {
-      supplierData.logo = req.uploadedImageUrls[0];
+    // Attach logo from single upload middleware if present
+    if (req.imageUrl) {
+      supplierData.logo = req.imageUrl;
     }
 
     // Check if supplier with same name or email exists
@@ -164,10 +171,16 @@ export const updateSupplier = async (req, res) => {
   try {
     const { supplierId } = req.params;
     const updates = req.body;
+    if (typeof updates.contact === 'string') {
+      try { updates.contact = JSON.parse(updates.contact); } catch { }
+    }
+    if (typeof updates.address === 'string') {
+      try { updates.address = JSON.parse(updates.address); } catch { }
+    }
 
-    // Attach logo from Cloudinary upload if present
-    if (Array.isArray(req.uploadedImageUrls) && req.uploadedImageUrls.length > 0) {
-      updates.logo = req.uploadedImageUrls[0];
+    // Attach logo from single upload middleware if present
+    if (req.imageUrl) {
+      updates.logo = req.imageUrl;
     }
 
     // Check if new name or email conflicts with existing supplier
