@@ -10,6 +10,6 @@ authRouter.post("/logout", authorize, logout);
 authRouter.get("/me", authorize, getCurrentUser);
 authRouter.post("/forgot-password", forgotPassword);
 authRouter.post("/reset-password", resetPassword);
-authRouter.post("/verify-reset-code", verifyPasswordResetCode);
+authRouter.post("/verify/reset-code", verifyPasswordResetCode);
 
 export default authRouter
