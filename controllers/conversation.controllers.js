@@ -2,13 +2,11 @@ import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
 
-// Create a new conversation
 export const createConversation = async (req, res) => {
   try {
     const { participantIds } = req.body;
     const userId = req.user.id;
 
-    // Validate participants
     if (!participantIds || !Array.isArray(participantIds) || participantIds.length === 0) {
       return res.status(400).json({
         success: false,
@@ -16,10 +14,8 @@ export const createConversation = async (req, res) => {
       });
     }
 
-    // Add current user to participants
     const allParticipants = [...new Set([userId, ...participantIds])];
 
-    // Check if conversation already exists
     const existingConversation = await Conversation.findOne({
       users: { $all: allParticipants }
     });
@@ -32,7 +28,6 @@ export const createConversation = async (req, res) => {
       });
     }
 
-    // Validate all participants exist
     const participants = await User.find({ _id: { $in: allParticipants } });
     if (participants.length !== allParticipants.length) {
       return res.status(400).json({
@@ -41,7 +36,6 @@ export const createConversation = async (req, res) => {
       });
     }
 
-    // Create new conversation
     const conversation = new Conversation({
       users: allParticipants,
       messages: [],
@@ -50,7 +44,6 @@ export const createConversation = async (req, res) => {
 
     await conversation.save();
 
-    // Populate users
     await conversation.populate('users', 'fullname username email');
 
     return res.status(201).json({
@@ -69,7 +62,6 @@ export const createConversation = async (req, res) => {
   }
 };
 
-// Get conversation by ID
 export const getConversation = async (req, res) => {
   try {
     const { conversationId } = req.params;
@@ -92,7 +84,6 @@ export const getConversation = async (req, res) => {
       });
     }
 
-    // Check if user is part of the conversation
     if (!conversation.users.some(user => user._id.toString() === userId)) {
       return res.status(403).json({
         success: false,
@@ -100,7 +91,6 @@ export const getConversation = async (req, res) => {
       });
     }
 
-    // Get unread count for this conversation
     const unreadCount = await Message.countDocuments({
       conversation: conversationId,
       receiver: userId,
@@ -126,7 +116,6 @@ export const getConversation = async (req, res) => {
   }
 };
 
-// Get all conversations for a user
 export const getUserConversations = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -146,7 +135,6 @@ export const getUserConversations = async (req, res) => {
       .skip(skip)
       .limit(parseInt(limit));
 
-    // Format conversations with unread counts
     const formattedConversations = await Promise.all(
       conversations.map(async (conversation) => {
         const otherUsers = conversation.users.filter(user => user._id.toString() !== userId);
@@ -191,7 +179,6 @@ export const getUserConversations = async (req, res) => {
   }
 };
 
-// Update conversation (add/remove participants)
 export const updateConversation = async (req, res) => {
   try {
     const { conversationId } = req.params;
@@ -206,7 +193,6 @@ export const updateConversation = async (req, res) => {
       });
     }
 
-    // Check if current user is part of the conversation
     if (!conversation.users.includes(currentUserId)) {
       return res.status(403).json({
         success: false,
@@ -215,7 +201,6 @@ export const updateConversation = async (req, res) => {
     }
 
     if (action === 'add') {
-      // Validate target user exists
       const targetUser = await User.findById(targetUserId);
       if (!targetUser) {
         return res.status(404).json({
@@ -224,16 +209,13 @@ export const updateConversation = async (req, res) => {
         });
       }
 
-      // Add user if not already in conversation
       if (!conversation.users.includes(targetUserId)) {
         conversation.users.push(targetUserId);
         await conversation.save();
       }
     } else if (action === 'remove') {
-      // Remove user from conversation
       conversation.users = conversation.users.filter(id => id.toString() !== targetUserId);
 
-      // If no users left, delete the conversation
       if (conversation.users.length === 0) {
         await Conversation.findByIdAndDelete(conversationId);
         await Message.deleteMany({ conversation: conversationId });
@@ -252,7 +234,6 @@ export const updateConversation = async (req, res) => {
       });
     }
 
-    // Populate users
     await conversation.populate('users', 'fullname username email');
 
     return res.status(200).json({
@@ -271,7 +252,6 @@ export const updateConversation = async (req, res) => {
   }
 };
 
-// Delete conversation
 export const deleteConversation = async (req, res) => {
   try {
     const { conversationId } = req.params;
@@ -285,7 +265,6 @@ export const deleteConversation = async (req, res) => {
       });
     }
 
-    // Check if user is part of the conversation
     if (!conversation.users.includes(userId)) {
       return res.status(403).json({
         success: false,
@@ -293,7 +272,6 @@ export const deleteConversation = async (req, res) => {
       });
     }
 
-    // Delete conversation and all its messages
     await Conversation.findByIdAndDelete(conversationId);
     await Message.deleteMany({ conversation: conversationId });
 
@@ -312,13 +290,11 @@ export const deleteConversation = async (req, res) => {
   }
 };
 
-// Get conversation between two users
 export const getConversationBetweenUsers = async (req, res) => {
   try {
     const { userId: otherUserId } = req.params;
     const currentUserId = req.user.id;
 
-    // Validate other user exists
     const otherUser = await User.findById(otherUserId);
     if (!otherUser) {
       return res.status(404).json({
@@ -327,13 +303,11 @@ export const getConversationBetweenUsers = async (req, res) => {
       });
     }
 
-    // Find or create conversation between these two users
     let conversation = await Conversation.findOne({
       users: { $all: [currentUserId, otherUserId] }
     });
 
     if (!conversation) {
-      // Create new conversation
       conversation = new Conversation({
         users: [currentUserId, otherUserId],
         messages: [],
@@ -341,8 +315,7 @@ export const getConversationBetweenUsers = async (req, res) => {
       });
       await conversation.save();
     }
-
-    // Populate users
+    
     await conversation.populate('users', 'fullname username email');
 
     return res.status(200).json({
