@@ -242,3 +242,29 @@ export const querySchemas = {
     })
   ),
 };
+
+// Message validation schemas
+export const messageSchemas = {
+  send: Joi.object({
+    receiverId: Joi.string().required(),
+    message: Joi.string().required().min(1).max(2000),
+    files: Joi.array().items(Joi.string().uri()).optional(),
+  }),
+
+  search: Joi.object({
+    query: Joi.string().required().min(1).max(100),
+    conversationId: Joi.string().optional(),
+  }),
+};
+
+// Conversation validation schemas
+export const conversationSchemas = {
+  create: Joi.object({
+    participantIds: Joi.array().items(Joi.string()).min(1).required(),
+  }),
+
+  update: Joi.object({
+    action: Joi.string().valid('add', 'remove').required(),
+    userId: Joi.string().required(),
+  }),
+};

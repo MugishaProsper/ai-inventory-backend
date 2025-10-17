@@ -15,6 +15,8 @@ import supplierRouter from "./routes/supplier.routes.js";
 import analyticsRouter from "./routes/analytics.routes.js";
 import aiRouter from "./routes/ai.routes.js";
 import stockMovementRouter from "./routes/stockMovement.routes.js";
+import messageRouter from "./routes/message.routes.js";
+import conversationRouter from "./routes/conversation.routes.js";
 
 import { configDotenv } from "dotenv";
 configDotenv()
@@ -50,6 +52,8 @@ app.use("/api/suppliers", supplierRouter);
 app.use("/api/analytics", analyticsRouter);
 app.use("/api/ai", aiRouter);
 app.use("/api/stock-movements", stockMovementRouter);
+app.use("/api/messages", messageRouter);
+app.use("/api/conversations", conversationRouter);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
@@ -76,7 +80,9 @@ app.get("/api", (req, res) => {
             suppliers: "/api/suppliers",
             analytics: "/api/analytics",
             ai: "/api/ai",
-            stockMovements: "/api/stock-movements"
+            stockMovements: "/api/stock-movements",
+            messages: "/api/messages",
+            conversations: "/api/conversations"
         },
         documentation: {
             postman: "/api/docs/postman",
