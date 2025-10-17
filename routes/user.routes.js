@@ -10,7 +10,7 @@ userRouter.put("/change-password", authorize, changePassword);
 userRouter.put("/me", authorize, updateUser);
 
 // Admin or specific user endpoints
-userRouter.get("/all", authorize, authorizeRole(["ADMIN", "SUPER_ADMIN"]), getAllUsers);
+userRouter.get("/all", authorize, getAllUsers);
 userRouter.get("/:userId", authorize, getUserById);
 userRouter.put("/:userId", authorize, updateUser);
 

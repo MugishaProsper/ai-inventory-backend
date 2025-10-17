@@ -252,7 +252,7 @@ export const messageSchemas = {
   }),
 
   search: Joi.object({
-    query: Joi.string().required().min(1).max(100),
+    query: Joi.string().optional().min(1).max(100),
     conversationId: Joi.string().optional(),
   }),
 };

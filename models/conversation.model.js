@@ -1,20 +1,20 @@
 import mongoose from "mongoose";
 
 const conversationSchema = mongoose.Schema({
-  users : [{
-    type : mongoose.Schema.Types.ObjectId,
-    ref : "User",
-    required : true
+  users: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
   }],
-  messages : [{
-    type : mongoose.Schema.Types.ObjectId,
-    ref : "Message",
-    required : true
+  messages: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Message",
+    default: []
   }],
-  lastMessage : {
-    type : mongoose.Schema.Types.ObjectId,
-    ref : "Message",
-    required : true
+  lastMessage: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Message",
+    default: null
   }
 }, { timestamps: true })
 
