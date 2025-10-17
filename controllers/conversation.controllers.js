@@ -232,18 +232,18 @@ export const updateConversation = async (req, res) => {
     } else if (action === 'remove') {
       // Remove user from conversation
       conversation.users = conversation.users.filter(id => id.toString() !== targetUserId);
-      
+
       // If no users left, delete the conversation
       if (conversation.users.length === 0) {
         await Conversation.findByIdAndDelete(conversationId);
         await Message.deleteMany({ conversation: conversationId });
-        
+
         return res.status(200).json({
           success: true,
           message: "Conversation deleted successfully"
         });
       }
-      
+
       await conversation.save();
     } else {
       return res.status(400).json({

@@ -103,7 +103,7 @@ app.use("*", (req, res) => {
 // Global error handler
 app.use((error, req, res, next) => {
     console.error("Global error:", error);
-    
+
     res.status(error.status || 500).json({
         success: false,
         message: error.message || "Internal server error",
@@ -116,7 +116,7 @@ app.listen(PORT, async () => {
     console.log(`🚀 Inventrika API Server running on http://localhost:${PORT}`);
     console.log(`📊 API Documentation available at http://localhost:${PORT}/api`);
     console.log(`🏥 Health check available at http://localhost:${PORT}/api/health`);
-    
+
     try {
         await connectToDatabase();
         console.log("✅ Database connected successfully");

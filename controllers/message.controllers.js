@@ -103,10 +103,10 @@ export const getMessages = async (req, res) => {
 
     // Mark messages as read for the current user
     await Message.updateMany(
-      { 
-        conversation: conversationId, 
-        receiver: userId, 
-        read: false 
+      {
+        conversation: conversationId,
+        receiver: userId,
+        read: false
       },
       { read: true }
     );
@@ -260,7 +260,7 @@ export const deleteMessage = async (req, res) => {
       const remainingMessages = await Message.find({ conversation: conversation._id })
         .sort({ createdAt: -1 })
         .limit(1);
-      
+
       conversation.lastMessage = remainingMessages.length > 0 ? remainingMessages[0]._id : null;
       await conversation.save();
     }
