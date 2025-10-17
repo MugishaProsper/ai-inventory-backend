@@ -3,12 +3,15 @@ import cloudinary from "../config/cloudinary.config.js";
 export const uploadImage = (folder) => {
   return async (req, res, next) => {
     try {
-      const file = req.file;
-      if (!file) return res.status(400).json({ success: false, message: "No file uploaded" });
-      const result = await cloudinary.uploader.upload(file.path, {
-        folder: folder
-      });
-      req.imageUrl = result.secure_url;
+      if(req.file){
+        const file = req.file;
+        if (!file) return next();
+        const result = await cloudinary.uploader.upload(file.path, {
+          folder: folder
+        });
+        req.imageUrl = result.secure_url;
+        next();
+      }
       next();
     } catch (error) {
       return res.status(500).json({ success: false, message: "Internal server error", error: error.message });
