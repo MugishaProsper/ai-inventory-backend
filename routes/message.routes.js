@@ -6,7 +6,8 @@ import {
   markAsRead,
   deleteMessage,
   getUnreadCount,
-  searchMessages
+  searchMessages,
+  updateMessage
 } from "../controllers/message.controllers.js";
 import { messageSchemas } from "../middlewares/validation.middleware.js";
 import { validate } from "../middlewares/validation.middleware.js";
@@ -33,5 +34,8 @@ messageRouter.get("/unread/count", getUnreadCount);
 
 // Search messages
 messageRouter.get("/search", validate(messageSchemas.search, "query"), searchMessages);
+
+// Update a message
+messageRouter.put("/:messageId", updateMessage);
 
 export default messageRouter;

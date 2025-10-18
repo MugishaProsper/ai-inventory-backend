@@ -361,3 +361,23 @@ export const searchMessages = async (req, res) => {
     });
   }
 };
+
+export const updateMessage = async (req, res) => {
+  const { messageId } = req.params;
+  const { updatedMessage } = req.body;
+  try {
+    const message = await Message.findByIdAndUpdate(messageId, { message: updatedMessage }, { new: true });
+    return res.status(200).json({
+      success: true,
+      message: "Message updated successfully",
+      data: message
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+}

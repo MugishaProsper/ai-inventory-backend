@@ -146,7 +146,7 @@ export const getUserConversations = async (req, res) => {
 
         return {
           _id: conversation._id,
-          participants: otherUsers,
+          users: otherUsers,
           lastMessage: conversation.lastMessage,
           unreadCount,
           updatedAt: conversation.updatedAt,
@@ -315,7 +315,7 @@ export const getConversationBetweenUsers = async (req, res) => {
       });
       await conversation.save();
     }
-    
+
     await conversation.populate('users', 'fullname username email');
 
     return res.status(200).json({
